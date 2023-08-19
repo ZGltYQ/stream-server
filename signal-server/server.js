@@ -1,17 +1,14 @@
 const SimplePeerServer = require('simple-peer-server');
 const http = require('http');
+const Turn = require('node-turn');
+
+const turnServer = new Turn({
+    debug : (lvl, message) => console.log(lvl, message)
+});
+
+turnServer.start();
 
 const server = http.createServer();
-new SimplePeerServer(server, true, {
-    simplePeerOptions: {
-        config: {
-        iceServers: [
-            { urls: 'stun:hisokajenkins.space:5349' }, 
-            { urls: 'stun:stun2.l.google.com:19302' },
-            { urls: 'stun:stun3.l.google.com:19302' },
-            { urls: 'stun:stun4.l.google.com:19302' }
-        ],
-    }
-}});
+new SimplePeerServer(server, true);
 
 server.listen(8081);

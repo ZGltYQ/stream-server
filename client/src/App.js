@@ -1,28 +1,37 @@
-import logo from './logo.svg';
-import './App.css'
-import { useRef, useState } from 'react'
+import './App.scss'
+import React, { useRef, useState } from 'react'
 import SimplePeerWrapper from 'simple-peer-wrapper/dist/simple-peer-wrapper';
 import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-// import { loadPlayer } from './Player/index'
 import { JSMpeg } from './Player'
 
 function App() {
-  const canvas = useRef()
+  const canvas = useRef();
+  
+  const [ isRecording, setIsRecording ] = useState(false);
+  const [ session, setSession ] = useState();
+
+  function handleClose() {
+    setIsRecording(false);
+    session.close();
+  }
+
   function handleStart() {
     const spw = new SimplePeerWrapper({
-      serverUrl: 'http://212.111.203.181:8081',
-      debug: true,
-      simplePeerOptions: {
-        config : { iceServers: [
-          { urls: 'stun:hisokajenkins.space:5349' }, 
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' },
-          { urls: 'stun:stun4.l.google.com:19302' }
-        ] }
+    serverUrl: 'http://hisokajenkins.space:8081',
+    debug: true,
+    simplePeerOptions: {
+        config : { 
+            iceServers: [
+            { urls: 'stun:hisokajenkins.space:5349' },
+            { urls: 'stun:hisokajenkins.space:3478' }
+          ] 
+        }
       }
     })
 
+    setSession(spw);
+    setIsRecording(true);
+    
     spw.connect();
 
     const player = new JSMpeg.Player('pipe', {
@@ -37,7 +46,6 @@ function App() {
       });
 
       canvas.current.addEventListener('keydown', ({ key }) => {
-        console.log({ key })
         if (spw.isConnectionStarted()) spw.send({ type: 'tap', key })
       })
 
@@ -51,8 +59,13 @@ function App() {
 
   return (
     <div className="App">
-      <Button variant="contained" onClick={handleStart}>start</Button>
-      <canvas tabindex='1' className='videoBlock' ref={canvas}></canvas>
+      <Button 
+        variant = "contained"
+        {...isRecording ? { onClick: handleClose } : { onClick: handleStart }}
+      >
+        {isRecording ? 'stop' : 'start'}
+      </Button>
+      <canvas tabIndex={1} className='videoBlock' ref={canvas}></canvas>
     </div>
   );
 }

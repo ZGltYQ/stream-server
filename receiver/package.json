@@ -4,24 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "build": "electron-builder -w",
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
     "appId": "receiver",
-    "mac": {
-      "target": [
-        {
-          "target": "default",
-          "arch": "universal"
-        }
-      ]
-    },
     "files": [
-      "index.js",
-      "build/**/*",
-      "node_modules/**/*",
-      "package.json"
+      "**/*"
+    ],
+    "extraFiles" : [
+      "ffmpeg.exe"
     ]
   },
   "keywords": [],
@@ -29,12 +22,15 @@
   "license": "ISC",
   "dependencies": {
     "fluent-ffmpeg": "^2.1.2",
+    "node-abi": "^2.20.0",
     "robotjs": "^0.6.0",
     "simple-peer": "^9.11.1",
     "simple-peer-wrapper": "0.0.5",
     "wrtc": "^0.4.7"
   },
   "devDependencies": {
+    "electron": "^26.0.0",
+    "electron-builder": "^24.6.3",
     "node-pre-gyp": "^0.17.0"
   }
 }

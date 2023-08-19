@@ -1,0 +1,4 @@
+{
+    "extends": [ "@imaginary-cloud/react", "no/void" ],
+    "ignorePatterns": ["webpack.config.js", "webpackMods/*.js", "src/serviceWorkerRegistration.js"]
+}
